@@ -1,0 +1,136 @@
+{% extends 'base.html' %}
+
+{% block title %}Edit Owned Asset{% endblock %}
+
+{% block content %}
+
+<style>
+
+    #assetType {
+        color: gray;
+    }
+    #disabled {
+        color: gray;
+    }
+
+
+</style>
+
+<h1 align="center">Edit {{ asset_to_edit.type }} Asset # {{ asset_to_edit.id }}</h1>
+<h4 align="left">
+    <a href="/view-assets">Back to View Assets</a>
+</h4>
+<h3 align="center">Asset USD cost: ${{ asset_to_edit.usd_price}}</h3>
+<h3 align="center">Current asset USD value: ${{ asset_to_edit.current_usd_price }}</h3>
+<form method="POST">
+    <div class="container">
+        <div class="col-12 mt-5">
+            <label for="description" class="form-label">Asset Description</label>
+            <input name="description" type="description" class="form-control" id="description" placeholder="{{ asset_to_edit.description }}">
+        </div>
+        <div class="col-12 mt-3">
+            <label for="assetType" class="form-label">Asset Type</label>
+            <select name="type" class="form-select mb-3" id="assetType">
+                <option disabled id="disabled">{{ asset_to_edit.type }}</option>
+                    <option value="Digital Land">Digital Land</option>
+                    <option value="NFT">NFT</option>
+            </select>
+       </div>
+       <label for="cryptoPrice" class="form-label">Crypto Purchase Price</label>
+       <div class="row">
+           <div class="col-4">
+               <input name="purchase_price" class="form-control" id="cryptoPrice" placeholder="{{ asset_to_edit.purchase_price}}" onchange="updateTokenType()">
+           </div>
+           <div class="col-8">
+               <select name="purchase_type" class="form-select mb-3" id="cryptoType" onchange="updateTokenType()">
+                    <option disabled selected id="selected">{{ asset_to_edit.purchase_type }}</option>
+                    <option value="bitcoin">Bitcoin</option>
+                    <option value="ethereum">Ether</option>
+                    <option value="matic-network">Matic</option>
+                    <option value="vulcan-forged">PYR</option>
+                    <option value="usd-coin">USDC</option>
+                </select>
+           </div>
+        </div>
+        <label for="usdPrice" class="form-label">USD Price</label>
+        <div class="input-group col-12 mt-1">
+            <label name="usd_price" type="text" class="list-group" id="disabledTextInput">${{ asset_to_edit.usd_price }} </label>
+        </div>
+        <div class="col-12 mt-3">
+            <label for="dateBought" class="form-label">Date Bought</label>
+            <input name="date_bought" type="date" class="form-control" id="dateBought" value="{{ asset_to_edit.date_bought }}">
+        </div>
+        <div class="row mt-4">
+            <div class="col-10">
+                <button type="submit" class="btn btn-primary">Update</button>
+            </div>
+            <div class="col-2 mt">
+                <button type="button" class="btn btn-danger" data-bs-toggle="modal" data-bs-target="#deleteModal{{ asset_to_edit.id }}">
+                    Delete
+                </button>
+            </div>
+        </div>
+    </div>
+
+
+
+
+    <div method="POST" class="modal fade" id="deleteModal{{ asset_to_edit.id }}" tabindex="-1" aria-labelledby="deleteModal{{ asset_to_edit.id }}" aria-hidden="true">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="deleteModal{{ asset_to_edit.id }}">Are you sure you want to delete this asset? It will be gone forever</h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+                <div class="modal-body">
+                    <p>Asset Id Number: {{ asset_to_edit.id }}</p>
+                    <p>Asset Description: {{ asset_to_edit.description }}</p>
+                    <p>Asset Type: {{ asset_to_edit.type }}</p>
+                    <p>Asset Crypto Price: {{ asset_to_edit.purchase_price }} {{ asset_to_edit.purchase_type }}</p>
+                    <p>Asset USD Price: ${{ asset_to_edit.usd_price }}</p>
+                </div>
+                <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+                <a href="/delete-asset/{{ asset_to_edit.id }}" id="deleteModal{{ asset_to_edit.id }}" class="btn btn-danger" role="button">Delete Asset</a>
+                </div>
+            </div>
+        </div>
+    </div>
+</form>
+
+<script>
+
+    function getTokenType()   {
+        
+        // Get the html element "select" that holds the options
+        let dropdown = document.getElementById("cryptoSelected");
+        let value_of_dropdown = dropdown.value;
+
+        // Get the html option element that was selected
+        let selected_element = dropdown.querySelectorAll("[value=" + value_of_dropdown +"]")[0];
+
+        // Use the "value" attribute for the name if "shortcut-name" is not defined in the html option element
+        let tokenUsed = selected_element.hasAttribute('shortcut-name') ? selected_element.getAttribute('shortcut-name') : selected_element.getAttribute('value');
+        document.getElementById("basic-addon").innerHTML = "Enter " + tokenUsed + " amount:"
+
+        //sessionStorage.setItem("tokenUsed", tokenUsed);
+
+    }
+
+    function updateTokenType() {
+        document.getElementById("selected").innerHTML = "SELECT CRYPTO TYPE";
+        var tokenSelected = document.getElementById("cryptoType").value;
+        console.log(tokenSelected)
+        if (tokenSelected === "SELECT CRYPTO TYPE"){
+            document.getElementById("cryptoType").style.backgroundColor = 'Red';
+            document.getElementById("cryptoType").style.color = 'White';
+        }else {
+            document.getElementById("cryptoType").style.backgroundColor = 'White';
+            document.getElementById("cryptoType").style.color = 'Black';
+        }
+    }
+
+</script>
+
+
+  {% endblock %}

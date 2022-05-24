@@ -1,0 +1,26 @@
+{% extends 'base.html' %}
+
+{% block title %}Home Page{% endblock %}
+
+{% block content %}
+
+<h1 align="center"> Welcome {{ user.username }}</h1>
+</br>
+    <div align="center">
+        <ul class="nav flex-column nav-pills">
+            <li class="nav-item">
+                <a class="nav-link active" href="/notes">Notes</a>
+            </li>
+        </br>
+            <li class="nav-item">
+                <a class="nav-link active" href="/view-assets">Assets</a>
+            </li>
+        </br>
+            <li class="nav-item">
+                <a class="nav-link active" href="#">Transaction Tracking</a>
+            </li>
+        </ul>
+    </div>
+</form>
+
+{% endblock %}

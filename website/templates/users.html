@@ -1,0 +1,15 @@
+{% extends 'base.html' %}
+
+{% block title %}Users{% endblock %}
+
+{% block content %}
+
+<h1 align="center">Users in database</h1>
+<ul class="list-group list-group-flush" id="users">
+    {% for name in names %} <!--from models.py user class, notes object-->
+    <li class="list-group-item">{{ name.username }}</li>
+
+    {% endfor %}
+
+
+{% endblock %}

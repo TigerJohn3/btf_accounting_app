@@ -1,0 +1,39 @@
+{% extends 'base.html' %}
+
+{% block title %}Home Page{% endblock %}
+
+{% block content %}
+
+<h1 align="center">{{ user.username }}'s Notes</h1>
+
+
+<ul class="list-group list-group-flush" id="notes">
+    {% for note in user.notes %} <!--from models.py user class, notes object-->
+    <li class="list-group-item">Note #: {{ note.id }}</li>
+        <a href="/delete-note/{{ note.id }}" class="btn btn-outline-danger btn-sm" role="button">
+            Delete Note
+        </a>
+    <!--The below code runs javascript that we'll use index.js for-->
+    <!--<button type="button" class="close" onClick="deleteNote({{ note.id }})">
+        <span aria-hidden="true">Delete Note</span>
+    </button>-->
+    <li class="list-group-item">{{ note.data }}</li>
+    <li class="list-group-item">Written on: {{ note.date }}
+    </li>
+    <li class="list-group-item">-------------------</li>
+    {% endfor %}
+</ul>
+<form method="POST">
+    <textarea name="note" id="note" class="form-control"></textarea>
+    <br/>
+    <div align="center">
+        <button type="submit" class="btn btn-primary">Add Note</button>
+    </br>
+    </br>
+        <nav class="nav-item">
+            <a class="nav-link active" href="/">Back to Home Page</a>
+        </nav>
+    </div>
+</form>
+
+{% endblock %}

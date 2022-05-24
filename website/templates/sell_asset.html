@@ -1,0 +1,50 @@
+{% extends 'base.html' %}
+
+{% block title %}Sell Asset{% endblock %}
+
+{% block content %}
+<style>
+    .sellbtn {
+        width: 25%;
+    }
+</style>
+
+
+<form method="POST">
+    <h1 align="center">Sell {{ item.type }} Asset</h1>
+
+    {% if item.type=="NFT" or item.type=="Digital Land" %}
+    <div align="center">
+        <label align="center" for="sellingItem{{item.id}}", class="form-label">
+            Purchase date/time: {{ item.date_bought}}
+        </label>
+        <br/>
+        <label align="center" for="sellingItem{{item.id}}", class="form-label">
+            Purchase Amount: {{ item.purchase_price}} {{ item.purchase_type }} 
+        </label>
+        <br/>
+        <label align="center" for="sellingItem {{item.id}}", class="form-label">
+            USD Amount: $ {{ item.usd_price }} 
+        </label>
+    <br/>
+    </div>
+    <div class="row g-3 align-items-center">
+        <h6>Enter Selling Info:</h6>
+        <div class="col-auto">
+          <label for="tokenSaleLabel" class="col-form-label">Enter amount of <strong>{{ item.purchase_type }}</strong> {{ item.type}} sold for:</label>
+        </div>
+        
+        <div type="tokenSaleAmount" class="input-group col-auto">
+          <input name="tokenSaleAmount" class="form-control" placeholder="Enter token amount sold for" aria-label="tokenSaleAmount">
+        </div>
+        <div>
+            <input name="date_sold" type="date" class="form-control" id="dateSold" value="{{ item.date_sold }}">
+        </div>
+        <div>
+            <button type="submit" class="btn btn-primary sellbtn">Sell {{ item.type }}</button>
+        </div>
+        </div>
+    {% endif %}
+</form>
+
+  {% endblock %}

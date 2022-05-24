@@ -1,0 +1,37 @@
+{% extends 'base.html' %}
+
+{% block title %}Add Asset{% endblock %}
+
+{% block content %}
+
+
+<form method="POST">
+    <h3 align="center">Add an Asset</h3>
+
+  
+  <!-- Asset Selection -->
+  <select class="form-select form-select-lg mb-3" aria-label=".form-select-lg example" id="assetList" onchange="getAssetType();">
+    <option selected>Select asset type</option>
+    <option value="Digital Land">Digital Land</option>
+    <option value="NFT">NFT</option>
+    <option value="Hardware Asset">Hardware Asset</option>
+  </select>
+
+  
+  <script>
+      function getAssetType()   {
+          let asssetList = document.getElementById("assetList");
+          console.log(asssetList)
+          let assetType = assetList.hasAttribute('shortcut-name') ? assetList.getAttribute('shortcut-name') : asssetList.value;
+          console.log(assetType);
+
+          sessionStorage.setItem("assetType", assetType)
+          assetURL = "/add-asset/" + assetType
+          console.log(assetURL)
+
+          location.href = assetURL
+
+      }
+  </script>
+
+{% endblock %}

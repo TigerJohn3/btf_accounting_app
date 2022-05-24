@@ -1,0 +1,19 @@
+{% extends 'base.html' %}
+
+{% block title %}Transaction Tracker{% endblock %}
+
+{% block content %}
+
+
+<h1 align="center"><strong>Track Your Transactions</strong></h1>
+
+<h3>Your polygon address: {{ address }}</h3>
+<h3>Your total tokens: {{ token_amount }}</h3>
+{% for row in data %}
+<p>{{ row.blockNumber }}</p>
+<p>{{ row.value }}</p>
+{% endfor %}
+
+
+
+{% endblock %}

@@ -1,0 +1,84 @@
+{% extends 'base.html' %}
+
+{% block title %}Asset List{% endblock %}
+
+{% block content %}
+
+<style>
+    a {
+        text-decoration: none;
+        color: white;
+        width: max-content;
+        height: max-content;
+        display: block;
+    }
+    a:hover {
+        color: white;
+    }
+    h3 a {
+        color: blue;
+        text-decoration: underline;
+        width: fit-content;
+        height: fit-content;
+    }
+    h3 a:hover {
+        color: blueviolet;
+        text-decoration: bold;
+    }
+
+</style>
+
+
+
+<!-- Asset Selection -->
+<h1 align="center"><strong>Currently Owned Assets</strong></h1>
+<div>
+    <h3 style="float:left"><a href="/add-asset">Add an asset</a></h3>
+    <h3 style="float:right"><a href="/sold-assets">View sold assets</a></h3>
+</div>
+
+
+    <table class="table table-sortable">
+        <thead>
+          <tr>
+            <th scope="col">Asset #</th>
+            <th scope="col">Asset Description</th>
+            <th scope="col">Asset Type</th>
+            <th scope="col">Token Cost</th>
+            <th scope="col">Token Type</th>
+            <th scope="col">USD Cost</th>
+            <!--Removed for now as a lot of API calls will have to be used
+            <th scope="col">Current USD Value</th>
+            -->
+            <th scope="col">Date Bought</th>
+          </tr>
+        </thead>
+        <tbody>
+        {% for asset in assets %}
+        {% if asset.currently_owned == True %}
+          <tr>
+            <td scope="row">{{ asset.id }}</td>
+            <td>{{ asset.description }}</td>
+            <td>{{ asset.type }}</td>
+            <td>{{ asset.purchase_price }}</td>
+            <td>{{ asset.purchase_type }}</td>
+            <td>${{ asset.usd_price }}</td>
+            <!-- Removed for now as a lot of API calls will have to be used
+            <td>${{ asset.current_usd_price }}</td>
+            -->
+            <td>{{ asset.date_bought }}</td>
+            <td>
+                <a href="/edit-owned-asset/{{ asset.id }}" class="btn btn-secondary" role="button">Edit Asset</a>
+            </td>
+            <td>
+                <a href="/sell-asset/{{ asset.id }}" class="btn btn-primary" role="button">Sell Asset</a>
+            </td>
+
+          </tr>
+        {% endif %}
+        {% endfor %}
+        </tbody>
+    </table>
+
+
+{% endblock %}

@@ -1,0 +1,118 @@
+{% extends 'base.html' %}
+
+{% block title %}Sold Assets{% endblock %}
+
+{% block content %}
+
+<style>
+    a {
+        text-decoration: none;
+        color: white;
+    }
+    a:hover {
+        color: white;
+    }
+    h3 a {
+        color: blue;
+        text-decoration: underline;
+    }
+    h3 a:hover {
+        color: blueviolet;
+        text-decoration: bold;
+    }
+    #positiveGains {
+        color: green;
+    }
+    #negativeGains {
+        color: red
+    }
+
+</style>
+
+
+
+<!-- Asset Selection -->
+<h1 align="center"><strong>Sold Assets</strong></h1>
+<div>
+    <h3 style="float:left"><a href="/view-assets">View currently held assets</a></h3>
+    {% if asset_pnl > 0 %}
+    <h3 style="float:right">Overall Digital Asset PnL: <strong id="positiveGains">${{ asset_pnl }}</strong></h3>
+    {% elif asset_pnl == 0 %}
+    <h3 style="float:right">Overall Digital Asset PnL: <strong>0</strong></h3>
+    {% else %}
+    <h3 style="float:right">Overall Digital Asset PnL: <strong id="negativeGains">${{ asset_pnl }}</strong></h3>
+    {% endif %}
+</div>
+
+
+
+    <table class="table table-sortable">
+        <thead>
+          <tr>
+            <th scope="col">Asset #</th>
+            <th scope="col">Asset Type</th>
+            <th scope="col">Asset Description</th>
+            <th scope="col">Token Cost</th>
+            <th scope="col">USD Cost</th>
+            <th scope="col">Date Bought</th>
+            <th scope="col">Date Sold</th>
+            <th scope="col">Token Sale Price</th>
+            <th scope="col">USD Sale Price</th>
+            <th scope="col">Capital Gain</th>
+          </tr>
+        </thead>
+        <tbody>
+        {% for asset in assets %}
+        {% if asset.currently_owned == False %}
+          <tr>
+            <th scope="row">{{ asset.id }}</th>
+            <td>{{ asset.type }}</td>
+            <td>{{ asset.description }}</td>
+            <td>{{ asset.purchase_price }} {{ asset.purchase_type }}</td>
+            <td>${{ asset.usd_price }}</td>
+            <td>{{ asset.date_bought }}</td>
+            <td>{{ asset.date_sold }}</td>
+            <td>{{ asset.sale_price }} {{ asset.purchase_type}}</td>
+            <td>${{ asset.usd_sale_price }}</td>
+            {% if asset.capital_gain > 0 %}
+            <td id="positiveGains">${{ asset.capital_gain }}</td>
+            {% elif asset_pnl == 0 %}
+            <td>${{ asset.capital_gain }}</td>
+            {% else %}
+            <td id="negativeGains">${{ asset.capital_gain }}</td>
+            {% endif %}
+            <td>
+                <button type="button" class="btn btn-danger" data-bs-toggle="modal" data-bs-target="#deleteModal{{ asset.id }}">
+                    Remove
+                </button>
+            </td>
+        {% endif %}
+        {% endfor %}
+
+        {% for asset in assets %}
+        {% if asset.currently_owned == False %}
+            <div method="POST" class="modal fade" id="deleteModal{{ asset.id }}" tabindex="-1" aria-labelledby="deleteModal{{ asset.id }}" aria-hidden="true">
+                <div class="modal-dialog">
+                    <div class="modal-content">
+                        <div class="modal-header">
+                        <h5 class="modal-title" id="deleteModal{{ asset.id }}">Are you sure you want to delete?</h5>
+                        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                        </div>
+                        <div class="modal-body">
+                            <p>Are you sure you want to remove this sold item?</p>
+                            <p>Asset Id#: {{ asset.id }}</p>
+                        </div>
+                        <div class="modal-footer">
+                        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+                        <a href="/delete-asset/{{ asset.id }}" id="deleteModal{{ asset.id }}" class="btn btn-danger" role="button">Remove Asset</a>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        {% endif %}
+        {% endfor %}
+
+      </table>
+
+
+{% endblock %}

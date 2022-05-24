@@ -1,0 +1,76 @@
+{% extends 'base.html' %}
+
+{% block title %}Add Asset{% endblock %}
+
+{% block content %}
+
+
+<form method="POST">
+    <h1 align="center">Add an Asset</h3>
+  
+  <!-- Asset Selection -->
+    <h3 align="center"><strong>{{ asset_type }}</strong></h1>
+
+    <p align="center"><a href="/add-asset">Choose a different asset type</a></p>
+
+    {% if asset_type=="NFT" or asset_type=="Digital Land" %}
+
+    <select class="form-select form-select-lg mb-3 form-control" aria-label=".form-select-lg example" name="cryptoSelected" type="cryptoSelected" id="cryptoSelected" onchange="getTokenType();">
+        <option disabled selected>Select the crypto token you used to purchase {{ asset_type }}</option>
+        <option value="bitcoin">Bitcoin</option>
+        <option value="ethereum" shortcut-name="eth">Ether</option>
+        <option value="matic-network" shortcut-name="matic">Matic</option>
+        <option value="vulcan-forged" shortcut-name="pyr">PYR</option>
+        <option value="usd-coin" shortcut-name="usdc">USDC</option>
+    </select>
+
+    <div class="input-group mb-3">
+        <span class="input-group-text" id="basic-addon"></span>
+        <input type="tokenAmount" name="tokenAmount" id="tokenAmount" class="form-control" placeholder="Enter token amount" aria-label="tokenAmount">
+    </div>
+    <div class="input-group mb-3">
+        <p id="tokenUsed"></p>
+        <span class="input-group-text">Enter description of {{ asset_type }}:</span>
+        <input type="assetDescription" name="assetDescription" id="assetDescription" class="form-control" placeholder="Type brief asset description here" aria-label="assetDescription">
+    </div>
+    <label class="form-label">Date Bought</label>
+    <div class="input-group mb-3">
+        <input name="date_bought" type="date" class="form-control" id="dateBought" value="{{ current_date }}">
+    </div>
+    <div class="d-grid gap-2 col-6 mx-auto">
+        <button class="btn btn-primary" type="submit">Submit</button>
+    </div>
+
+
+    {% else %}
+    <div class="input-group mb-3">
+        <span class="input-group-text">$</span>
+        <input type="assetValue" name="assetValue" id="assetValue" class="form-control" placeholder="Enter value of asset" aria-label="assetValue">
+    </div>
+    <div class="d-grid gap-2 col-6 mx-auto">
+        <button class="btn btn-primary" type="submit">Submit</button>
+    </div>
+    {% endif %}
+
+
+    <script>
+        function getTokenType()   {
+            
+            // Get the html element "select" that holds the options
+            let dropdown = document.getElementById("cryptoSelected");
+            let value_of_dropdown = dropdown.value;
+
+            // Get the html option element that was selected
+            let selected_element = dropdown.querySelectorAll("[value=" + value_of_dropdown +"]")[0];
+
+            // Use the "value" attribute for the name if "shortcut-name" is not defined in the html option element
+            let tokenUsed = selected_element.hasAttribute('shortcut-name') ? selected_element.getAttribute('shortcut-name') : selected_element.getAttribute('value');
+            document.getElementById("basic-addon").innerHTML = "Enter " + tokenUsed + " amount:"
+
+            //sessionStorage.setItem("tokenUsed", tokenUsed);
+
+        }
+    </script>
+
+
+{% endblock %}
