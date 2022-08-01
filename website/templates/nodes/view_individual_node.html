@@ -1,0 +1,73 @@
+{% extends 'base.html' %}
+
+{% block title %}View Node{% endblock %}
+
+{% block content %}
+
+<style>
+
+    #assetType {
+        color: gray;
+    }
+    #disabled {
+        color: gray;
+    }
+
+
+</style>
+
+<h1 align="center">By The Fire {{ node_to_edit.network }} Node</h1>
+<h4 align="left">
+    <a href="/view-nodes">Back to Nodes</a>
+</h4>
+<h3 align="center">Asset USD cost:</h3>
+<form method="POST">
+    <div class="container">
+        <div class="col-12 mt-5">
+            <label for="description" class="form-label">Asset Description</label>
+            <input name="description" type="description" class="form-control" id="description">
+        </div>
+        <div class="col-12 mt-3">
+            <label for="assetType" class="form-label">Asset Type</label>
+            <select name="type" class="form-select mb-3" id="assetType">
+                <option disabled id="disabled"></option>
+                    <option value="Digital Land">Digital Land</option>
+                    <option value="NFT">NFT</option>
+            </select>
+       </div>
+       <label for="cryptoPrice" class="form-label">Crypto Purchase Price</label>
+       <div class="row">
+           <div class="col-4">
+               <input name="purchase_price" class="form-control" id="cryptoPrice" placeholder="">
+           </div>
+           <div class="col-8">
+               <select name="purchase_type" class="form-select mb-3" id="cryptoType">
+                    <option disabled selected id="selected"></option>
+                    <option value="bitcoin">Bitcoin</option>
+                    <option value="ethereum">Ether</option>
+                    <option value="matic-network">Matic</option>
+                    <option value="vulcan-forged">PYR</option>
+                    <option value="usd-coin">USDC</option>
+                </select>
+           </div>
+        </div>
+        <label for="usdPrice" class="form-label">USD Price</label>
+        <div class="input-group col-12 mt-1">
+            <label name="usd_price" type="text" class="list-group" id="disabledTextInput">$</label>
+        </div>
+        <div class="row mt-4">
+            <div class="col-10">
+                <button type="submit" class="btn btn-primary">Update</button>
+            </div>
+            <div class="col-2 mt">
+                <button type="button" class="btn btn-danger" data-bs-toggle="modal">
+                    Delete
+                </button>
+            </div>
+        </div>
+    </div>
+
+
+</form>
+
+{% endblock %}

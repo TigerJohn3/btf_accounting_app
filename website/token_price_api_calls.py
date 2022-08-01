@@ -9,7 +9,9 @@ def asset_usd_price(token_type, token_amount):
 
 
 def token_call(token_name):
+    print(token_name)
     response = requests.get(f"https://api.coingecko.com/api/v3/simple/price?ids={token_name}&vs_currencies=usd")
+    print(response)
     data = json.loads(response.text)
     price = float(data[token_name]['usd'])
     return price
@@ -36,37 +38,3 @@ def token_display_switch(token_name):
         elif token_name == token[1]:
             return token[0]
     return "This token is not added to the list, contact support"
-
-
-
-
-"""
-# Pull bitcoin price from coingecko api
-def bitcoin_usd_price():
-    bitcoin_price = requests.get("https://api.coingecko.com/api/v3/simple/price?ids=bitcoin&vs_currencies=usd")
-    bitcoin_price = json.loads(bitcoin_price.text)
-    bitcoin_price = float(bitcoin_price['bitcoin']['usd'])
-    return bitcoin_price
-
-# Pull ether price from coingecko api
-def eth_usd_price():
-    eth_price = requests.get("https://api.coingecko.com/api/v3/simple/price?ids=ethereum&vs_currencies=usd")
-    eth_price = json.loads(eth_price.text)
-    eth_price = float(eth_price['ethereum']['usd'])
-    return eth_price
-
-# Pull matic price from coingecko api
-def matic_usd_price():
-    matic_price = requests.get("https://api.coingecko.com/api/v3/simple/price?ids=matic-network&vs_currencies=usd")
-    matic_price = json.loads(matic_price.text)
-    matic_price = float(matic_price['matic-network']['usd'])
-    return matic_price
-
-# Pull pyr price from coingecko api
-def pyr_usd_price():
-    pyr_price = requests.get("https://api.coingecko.com/api/v3/simple/price?ids=vulcan-forged&vs_currencies=usd")
-    pyr_price = json.loads(pyr_price.text)
-    pyr_price = float(pyr_price['vulcan-forged']['usd'])
-    return pyr_price
-
-"""

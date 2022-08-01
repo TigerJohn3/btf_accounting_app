@@ -1,0 +1,50 @@
+{% extends 'base.html' %}
+
+{% block title %}Add Node{% endblock %}
+
+{% block content %}
+
+
+<form method="POST">
+    <h1 align="center">Add a Node</h1>
+  
+  <!-- Node Inputs -->
+    <h4 align="left"><strong>Enter Network</strong></h4>
+    <div class="input-group mb-3">
+        <input type="text" name="networkName" id="networkName" class="form-control" placeholder="Enter network node will be validating">
+    </div>
+    <h4 align="left"><strong>Enter Node Address</strong></h4>
+    <div class="input-group mb-3">
+        <input type="text" name="nodeAddress" id="nodeAddress" class="form-control" placeholder="Enter public key address that houses node assets">
+    </div>
+    <h4 align="left"><strong>Enter Token Being Received</strong></h4>
+    <div class="input-group mb-3">
+        <input type="text" name="networkToken" id="networkToken" class="form-control" placeholder="Enter the token received as compensation for validating network">
+    </div>
+    <br>
+    <div class="d-grid gap-2 col-6">
+        <button class="btn btn-primary" type="submit">Add Node</button>
+    </div>
+
+
+    <script>
+        function getTokenType()   {
+            
+            // Get the html element "select" that holds the options
+            let dropdown = document.getElementById("cryptoSelected");
+            let value_of_dropdown = dropdown.value;
+
+            // Get the html option element that was selected
+            let selected_element = dropdown.querySelectorAll("[value=" + value_of_dropdown +"]")[0];
+
+            // Use the "value" attribute for the name if "shortcut-name" is not defined in the html option element
+            let tokenUsed = selected_element.hasAttribute('shortcut-name') ? selected_element.getAttribute('shortcut-name') : selected_element.getAttribute('value');
+            document.getElementById("basic-addon").innerHTML = "Enter " + tokenUsed + " amount:"
+
+            //sessionStorage.setItem("tokenUsed", tokenUsed);
+
+        }
+    </script>
+
+
+{% endblock %}

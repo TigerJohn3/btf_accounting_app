@@ -2,7 +2,7 @@ from lib2to3.pgen2 import token
 from time import strftime
 import traceback
 from . import db, token_price_api_calls
-from .models import Note, User, Asset
+from .models import Note, User, Asset, Node
 import datetime
 import time
 from flask import Blueprint, flash, Flask, jsonify, redirect, render_template, request, session, url_for
@@ -25,6 +25,42 @@ views = Blueprint('views', __name__)
 def home():
     return render_template('home.html', user=current_user) 
     #checks to see if current user is authenticated (for base.html)
+
+@views.route('/add-node', methods = ['GET', 'POST'])
+@login_required
+def add_node():
+    if request.method == 'POST':
+        node_network = request.form.get('networkName')
+        node_address = request.form.get('nodeAddress')
+        network_token = request.form.get('networkToken')
+
+        new_node = Node(network=node_network, wallet_address=node_address, token=network_token)
+
+        db.session.add(new_node)
+        db.session.commit()
+        flash('New Node Added', category='success')
+        return redirect(url_for('views.view_nodes'))
+
+    return render_template('/nodes/add_node.html', user=current_user)
+
+
+@views.route('/view-nodes', methods = ['GET', 'POST'])
+@login_required
+def view_nodes():
+    nodes = Node.query.all()
+
+    return render_template('/nodes/view_nodes.html', user=current_user, nodes=nodes)
+
+
+@views.route('/view-node/<int:id>', methods = ['GET', 'POST'])
+@login_required
+def view_individual_node(id):
+    node_to_edit = Node.query.get_or_404(id)
+
+    return render_template('/nodes/view_individual_node.html', user=current_user, node_to_edit=node_to_edit)
+
+    
+
 
 
 @views.route('/transaction-tracking', methods = ['GET', 'POST'])
@@ -251,6 +287,7 @@ def view_assets():
 @views.route('/edit-owned-asset/<int:id>', methods = ['GET', 'POST'])
 @login_required
 def edit_owned_asset(id):
+    # moose
     allowed_attributes = [
         'description',
         'purchase_type',

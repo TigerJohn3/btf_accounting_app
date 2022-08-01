@@ -1,0 +1,49 @@
+{% extends 'base.html' %}
+
+{% block title %}View Nodes{% endblock %}
+
+{% block content %}
+
+<style>
+    .table thead tr {
+        background-color: white;
+        color: rgb(0, 0, 0);
+        text-align: left;
+    }
+</style>
+
+
+
+<h1 align="center"><strong>Welcome to the Node Homepage</strong></h1>
+<!-- Show nodes in databse -->
+    <table class="table table-sortable">
+        <thead>
+          <tr>
+            <th scope="col">Node Network</th>
+            <th scope="col">Token Received</th>
+            <th scope="col">Wallet Address</th>
+          </tr>
+        </thead>
+        <tbody>
+        {% for node in nodes %}
+          <tr>
+            <td>{{ node.network }}</td>
+            <td>{{ node.token }}</td>
+            <td>{{ node.wallet_address }}</td>
+            <td>
+                <a href="/view-node/{{ node.id }}" class="btn btn-secondary" role="button">View Node Details</a>
+            </td>
+
+          </tr>
+        {% endfor %}
+        </tbody>
+    </table>
+
+
+<div class="d-grid gap-2">
+    <a href="/add-node" class="btn btn-primary role" role="button">Add a Node</a>
+</div>
+
+
+
+    {% endblock %}

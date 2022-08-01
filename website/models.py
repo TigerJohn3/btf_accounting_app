@@ -43,6 +43,23 @@ class Asset(db.Model):
     capital_gain = db.Column(db.Integer, default=None)
 
 
+class Node(db.Model):
+    id = db.Column(db.Integer, primary_key=True)
+    network = db.Column(db.String(150))
+    balance = db.Column(db.Integer, default=None)
+    wallet_address = db.Column(db.String(100))
+    token = db.Column(db.String(50), default=None)
+    income = db.relationship('Income', backref='node', uselist=False) #uselist=false makes this a one to one relationship
+
+class Income(db.Model):
+    id = db.Column(db.Integer, primary_key=True)
+    income_date = db.Column(db.DateTime(timezone=True))
+    income_amount = db.Column(db.Integer, default=None)
+    income_unit = db.Column(db.String(50), default=None)
+    node_id = db.Column(db.Integer, db.ForeignKey('node.id'))
+
+
+
 
 
 # Note from above - class name is LOWERCASE when using the foreign key
