@@ -16,58 +16,80 @@
 
 </style>
 
-<h1 align="center">By The Fire {{ node_to_edit.network }} Node</h1>
 <h4 align="left">
     <a href="/view-nodes">Back to Nodes</a>
 </h4>
-<h3 align="center">Asset USD cost:</h3>
-<form method="POST">
-    <div class="container">
-        <div class="col-12 mt-5">
-            <label for="description" class="form-label">Asset Description</label>
-            <input name="description" type="description" class="form-control" id="description">
-        </div>
-        <div class="col-12 mt-3">
-            <label for="assetType" class="form-label">Asset Type</label>
-            <select name="type" class="form-select mb-3" id="assetType">
-                <option disabled id="disabled"></option>
-                    <option value="Digital Land">Digital Land</option>
-                    <option value="NFT">NFT</option>
-            </select>
-       </div>
-       <label for="cryptoPrice" class="form-label">Crypto Purchase Price</label>
-       <div class="row">
-           <div class="col-4">
-               <input name="purchase_price" class="form-control" id="cryptoPrice" placeholder="">
-           </div>
-           <div class="col-8">
-               <select name="purchase_type" class="form-select mb-3" id="cryptoType">
-                    <option disabled selected id="selected"></option>
-                    <option value="bitcoin">Bitcoin</option>
-                    <option value="ethereum">Ether</option>
-                    <option value="matic-network">Matic</option>
-                    <option value="vulcan-forged">PYR</option>
-                    <option value="usd-coin">USDC</option>
-                </select>
-           </div>
-        </div>
-        <label for="usdPrice" class="form-label">USD Price</label>
-        <div class="input-group col-12 mt-1">
-            <label name="usd_price" type="text" class="list-group" id="disabledTextInput">$</label>
-        </div>
-        <div class="row mt-4">
-            <div class="col-10">
-                <button type="submit" class="btn btn-primary">Update</button>
-            </div>
-            <div class="col-2 mt">
-                <button type="button" class="btn btn-danger" data-bs-toggle="modal">
-                    Delete
-                </button>
-            </div>
+<h1 align="center">By The Fire {{ node_to_edit.network }} Node</h1>
+
+<div class="container">
+    <div class="row align-items-start">
+        <div class="col-4">
+            <h3>Balance: </h3>
         </div>
     </div>
+    <div class="row justify-content-center">
+        <div class="col-10">
+            <h4>{{ node_to_edit.balance }} {{ node_to_edit.token }}</h4>
+        </div>
+    </div>
+</div>
+
+<br/>
+
+<div class="container">
+    <div class="row align-items-start">
+        <div class="col-4">
+            <h3>Wallet Address: </h3>
+        </div>
+    </div>
+    <div class="row justify-content-evenly">
+        <div class="col-7">
+            <h4>{{ node_to_edit.wallet_address }}</h4>
+        </div>
+        <div class="col-2">
+            <button type="button" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#nodeAddress" data-bs-whatever="@mdo">Edit Node Address</button>
+        </div>
+    </div>
+</div>
+
+<br/>
+
+<div class="container">
+    <div class="row align-items-start">
+        <div class="col-4">
+            <h3>Income history </h3>
+        </div>
+    </div>
+    <div class="row justify-content-center">
+        <div class="col-10">
+            <h4>Here is where we'll call from the scan apis to get income history</h4>
+        </div>
+    </div>
+</div>
 
 
-</form>
+<div class="modal fade" id="nodeAddress" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+  <div class="modal-dialog">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title" id="modalLabel">Enter Node Address</h5>
+        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+      </div>
+      <div class="modal-body">
+        <form method="POST" name="addressData" action="/update-node/{{ node_to_edit.id }}">
+          <div class="mb-3">
+            <label for="recipient-name" class="col-form-label">New Node Address:</label>
+            <input type="text" class="form-control" name="newNodeAddress" id="newNodeAddress" placeholder={{ node_to_edit.wallet_address }}>
+          </br>
+            <input type="submit" class="btn btn-primary" value="Update">
+          </div>
+        </form>
+      </div>
+    </div>
+  </div>
+</div>
+
+
+
 
 {% endblock %}

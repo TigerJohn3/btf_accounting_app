@@ -1,5 +1,4 @@
-from operator import index
-from flask import Flask, redirect, url_for, render_template
+from flask import Flask
 from flask_sqlalchemy import SQLAlchemy
 from datetime import datetime
 from os import path

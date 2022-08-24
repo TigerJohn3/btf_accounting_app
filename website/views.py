@@ -1,7 +1,8 @@
 from lib2to3.pgen2 import token
 from time import strftime
 import traceback
-from . import db, token_price_api_calls
+from turtle import update
+from . import db, token_price_api_calls, node_api_calls
 from .models import Note, User, Asset, Node
 import datetime
 import time
@@ -10,6 +11,12 @@ from flask_login import current_user, login_required
 from unicodedata import category
 from dotenv import load_dotenv
 import os
+
+
+
+### Next - Add a ledger of all BTF transactions!!!
+
+
 
 #from polygonscan import PolygonScan - You need this if using github poly scan code
 
@@ -25,6 +32,12 @@ views = Blueprint('views', __name__)
 def home():
     return render_template('home.html', user=current_user) 
     #checks to see if current user is authenticated (for base.html)
+
+
+#####
+## Nodes section ##
+#####
+
 
 @views.route('/add-node', methods = ['GET', 'POST'])
 @login_required
@@ -43,7 +56,55 @@ def add_node():
 
     return render_template('/nodes/add_node.html', user=current_user)
 
+# Delete Node
+@views.route('/delete-node/<int:id>', methods = ['GET'])
+@login_required
+def delete_node(id):
+    node_to_delete = Node.query.get_or_404(id)
+    print(node_to_delete)
 
+
+    ### Will need to add a confirmation before deleting at some point
+
+    try:
+        flash(f'{node_to_delete.network} node has been deleted', category='error')
+        db.session.delete(node_to_delete)
+        db.session.commit()
+        return redirect(url_for('views.view_nodes'))
+    except:
+        return "We ran into a problem bro. A big time problem"
+
+# Update Node
+@views.route('/update-node/<int:id>', methods = ['POST'])
+def update_node_address(id):
+    node_to_update = Node.query.get_or_404(id)
+    try:
+        new_node_address = request.form['newNodeAddress']
+        # May be inefficient - Need to check so balance is updated on website
+        if node_to_update.network == "Stacks":
+            node_to_update.balance = node_api_calls.stacks_balance(node_to_update.wallet_address)
+        if new_node_address == "":
+            print(node_to_update.wallet_address)
+            return render_template('/nodes/view_individual_node.html', user=current_user, node_to_edit=node_to_update)
+        else:
+            print("UPDATED")
+            node_to_update.wallet_address = new_node_address
+            print(node_to_update.wallet_address)
+            db.session.commit()
+            flash("Wallet Address Updated", category='success')
+            return render_template('/nodes/view_individual_node.html', user=current_user, node_to_edit=node_to_update)
+        
+    except IOError:
+        traceback.format_exc()
+        return "There was a problem updating node"
+
+
+
+## It took long enough, but you figured out how to update node address.
+# Next step, pull in transaction history
+
+
+# View total nodes page
 @views.route('/view-nodes', methods = ['GET', 'POST'])
 @login_required
 def view_nodes():
@@ -51,15 +112,18 @@ def view_nodes():
 
     return render_template('/nodes/view_nodes.html', user=current_user, nodes=nodes)
 
-
+# View an individual node
 @views.route('/view-node/<int:id>', methods = ['GET', 'POST'])
 @login_required
 def view_individual_node(id):
     node_to_edit = Node.query.get_or_404(id)
+    if node_to_edit.network == "Stacks":
+        node_to_edit.balance = node_api_calls.stacks_balance(node_to_edit.wallet_address)
 
     return render_template('/nodes/view_individual_node.html', user=current_user, node_to_edit=node_to_edit)
 
-    
+
+### When starting off coding on 21 Aug 22, ensure the view node section is editable
 
 
 
@@ -108,14 +172,16 @@ def transactions():
     data=transaction_data
     )
 
-
-
     # This is the code to use with the Github functions written
     # with PolygonScan("7UW6I72B4W8HSIWH41NKX5QMD97NZ6F85Z",False) as pyr:
     #     print(float(pyr.get_matic_balance(john_matic_address))/1000000000000000000)
     #     print(float(pyr.get_acc_balance_by_token_and_contract_address(lava_contract_address, john_matic_address))/1000000000000000000) 
     #     pyr_in_wallet = float(pyr.get_acc_balance_by_token_and_contract_address(pyr_contract_address, john_matic_address)) / 1000000000000000000
     #     return str(pyr_in_wallet)
+
+
+
+
 
 
 # View to add first part of asset
