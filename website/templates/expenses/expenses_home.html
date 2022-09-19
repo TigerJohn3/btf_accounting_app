@@ -1,0 +1,52 @@
+{% extends 'base.html' %}
+
+{% block title %}Expenses{% endblock %}
+
+{% block content %}
+
+<style>
+    .table thead tr {
+        background-color: white;
+        color: rgb(0, 0, 0);
+        text-align: left;
+    }
+</style>
+
+
+
+<h1 align="center"><strong>By The Fire Expenses</strong></h1>
+<!-- Show nodes in databse -->
+    <table class="table table-sortable">
+        <thead>
+          <tr>
+            <th scope="col">Type of Expense</th>
+            <th scope="col">Token Used</th>
+            <th scope="col">Token Amount</th>
+            <th scope="col">US Dollar Amount</th>
+            <th scope="col">Date</th>
+          </tr>
+        </thead>
+        <tbody>
+        {% for row in income %}
+          <tr>
+            <td>{{ income.type }}</td>
+            <td>{{ income.token }}</td>
+            <td>{{ income.token_amount }}</td>
+            <td>{{ income.dollar_amount }}</td>
+            <td>{{ income.transaction_date }}</td>
+            <td>
+                <a href="/view-node/{{ node.id }}" class="btn btn-secondary" role="button">View Node Details</a>
+                <a href="/delete-node/{{ node.id }}" class="btn btn-danger" role="button">Delete Node</a>
+            </td>
+
+          </tr>
+        {% endfor %}
+        </tbody>
+    </table>
+
+
+<div class="d-grid gap-2">
+    <a href="/add-node" class="btn btn-primary role" role="button">Add Expense</a>
+</div>
+
+{% endblock %}

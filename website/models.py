@@ -49,14 +49,32 @@ class Node(db.Model):
     balance = db.Column(db.Integer, default=None)
     wallet_address = db.Column(db.String(100))
     token = db.Column(db.String(50), default=None)
-    income = db.relationship('Income', backref='node', uselist=False) #uselist=false makes this a one to one relationship
+    income = db.relationship('nodeIncome', backref='node', uselist=False) #uselist=false makes this a one to one relationship
 
-class Income(db.Model):
+class nodeIncome(db.Model):
     id = db.Column(db.Integer, primary_key=True)
     income_date = db.Column(db.DateTime(timezone=True))
     income_amount = db.Column(db.Integer, default=None)
     income_unit = db.Column(db.String(50), default=None)
     node_id = db.Column(db.Integer, db.ForeignKey('node.id'))
+
+class transactionIncome(db.Model):
+    id = db.Column(db.Integer, primary_key=True)
+    type = db.Column(db.String(50), default=None)
+    token = db.Column(db.String(50), default=None)
+    token_amount = db.Column(db.Integer, default=None)
+    dollar_amount = db.Column(db.Integer, default=None)
+    transaction_date = db.Column(db.DateTime(timezone-True), default=None)
+    income_description = db.Column(db.String(10000), default=None)
+
+class transactionExpense(db.Model):
+    id = db.Column(db.Integer, primary_key=True)
+    type = db.Column(db.String(50), default=None)
+    token = db.Column(db.String(50), default=None)
+    token_amount = db.Column(db.Integer, default=None)
+    dollar_amount = db.Column(db.Integer, default=None)
+    transaction_date = db.Column(db.DateTime(timezone-True), default=None)
+    expense_description = db.Column(db.String(10000), default=None)
 
 
 

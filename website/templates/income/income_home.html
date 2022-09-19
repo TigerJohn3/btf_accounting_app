@@ -1,0 +1,50 @@
+{% extends 'base.html' %}
+
+{% block title %}Income{% endblock %}
+
+{% block content %}
+
+<style>
+    .table thead tr {
+        background-color: white;
+        color: rgb(0, 0, 0);
+        text-align: left;
+    }
+</style>
+
+
+
+<h1 align="center"><strong>By The Fire Income</strong></h1>
+    <table class="table table-sortable">
+        <thead>
+          <tr>
+            <th scope="col">Type of Income</th>
+            <th scope="col">Token Received</th>
+            <th scope="col">Token Amount</th>
+            <th scope="col">US Dollar Amount</th>
+            <th scope="col">Date</th>
+          </tr>
+        </thead>
+        <tbody>
+        {% for row in income %}
+          <tr>
+            <td>{{ row.type }}</td>
+            <td>{{ row.token }}</td>
+            <td>{{ row.token_amount }}</td>
+            <td>$ {{ row.dollar_amount }}</td>
+            <td>{{ row.transaction_date }}</td>
+            <td>
+              <a href="#" class="btn btn-sm btn-secondary" role="button">View Node Details</a>
+              <a href="/delete-income/{{ row.id }}" class="btn btn-sm btn-danger" role="button">Delete</a>
+            </td>
+          </tr>
+        {% endfor %}
+        </tbody>
+    </table>
+
+
+<div class="d-grid gap-2">
+    <a href="/add-income" class="btn btn-primary role" role="button">Add income</a>
+</div>
+
+{% endblock %}

@@ -3,7 +3,7 @@ from time import strftime
 import traceback
 from turtle import update
 from . import db, token_price_api_calls, node_api_calls
-from .models import Note, User, Asset, Node
+from .models import Note, User, Asset, Node, transactionExpense, transactionIncome
 import datetime
 import time
 from flask import Blueprint, flash, Flask, jsonify, redirect, render_template, request, session, url_for
@@ -14,7 +14,14 @@ import os
 
 
 
-### Next - Add a ledger of all BTF transactions!!!
+#### Where to leave off!!!
+## To do list
+# Add delete/edit button to the income section
+# Change the asset section so it does NOT do a bunch of api calls when showing assets (see the add-income section)
+# In the income section, ensure you have a dropdown of only BTF treasury coins
+# Add Investment Section
+# Clean up the code to make it more readable - add comments where necessary
+# Add Javascript to automatically update price in add income section
 
 
 
@@ -123,11 +130,104 @@ def view_individual_node(id):
     return render_template('/nodes/view_individual_node.html', user=current_user, node_to_edit=node_to_edit)
 
 
-### When starting off coding on 21 Aug 22, ensure the view node section is editable
 
 
 
-@views.route('/transaction-tracking', methods = ['GET', 'POST'])
+
+
+# Income Section
+@views.route('/income', methods = ['GET', 'POST'])
+@login_required
+def income_home():
+
+
+    income = transactionIncome.query.all()
+
+    for row in income:
+        row.transaction_date = row.transaction_date.strftime("%a %b %d %Y")
+
+    return render_template('/income/income_home.html', user=current_user, income=income)
+
+
+
+
+@views.route('/add-income', methods = ['GET', 'POST'])
+@login_required
+def add_income():
+    if request.method == 'POST':
+        income_type = request.form.get('incomeType')
+        token_type = request.form.get('tokenType')
+        token_amount = request.form.get('tokenAmount')
+        transaction_date = request.form.get('date')
+
+        updated_transaction_date = datetime.datetime.strptime(transaction_date, "%Y-%m-%d")
+
+        income_note = request.form.get('incomeNote')
+
+        # Add input from html form to database
+        new_income = transactionIncome(type=income_type, token=token_type, token_amount=token_amount, transaction_date=updated_transaction_date, income_description=income_note)
+
+        # Call API to switch token input name to coingecko api readable name
+        token_display_name = token_price_api_calls.token_display_switch(new_income.token)
+
+        # Get dollar amount to insert into database
+        new_income.dollar_amount = float(token_price_api_calls.token_call(token_display_name)) * float(token_amount)
+
+        db.session.add(new_income)
+        db.session.commit()
+        flash('Income Added', category='success')
+        return redirect(url_for('views.income_home'))
+
+    current_date = datetime.date.today()
+    return render_template('/income/add_income.html', user=current_user, current_date=current_date)
+
+
+# Delete Income
+@views.route('/delete-income/<int:id>', methods = ['GET'])
+@login_required
+def delete_income(id):
+    income_to_delete = transactionIncome.query.get_or_404(id)
+    print(income_to_delete)
+
+    ### Will need to add a confirmation before deleting at some point
+
+    try:
+        flash('Income is deleted', category='error')
+        db.session.delete(income_to_delete)
+        db.session.commit()
+        return redirect(url_for('views.income_home'))
+    except:
+        return "We ran into a problem bro. A big time problem"
+
+### Add the delete button to HTML here ###
+
+
+
+
+# Expenses Section
+@views.route('/expenses')
+@login_required
+def expenses_home():
+    expenses = transactionExpense.query.all()
+    return render_template('/expenses/expenses_home.html', user=current_user, expenses=expenses)
+
+# Leave off here - do the same thing I did with income for expenses
+
+
+
+
+# Investments Section
+
+
+
+
+
+
+
+
+
+# This is not on the NavBar for now - It will be once we get established wallets
+@views.route('/wallet-transaction-tracking', methods = ['GET', 'POST'])
 @login_required
 def transactions():
     load_dotenv()
@@ -224,7 +324,6 @@ def process_asset(assetType):
                     usd_price = token_price_api_calls.asset_usd_price(crypto_selected, token_amount)
                     asset_description = request.form.get('assetDescription')
                     date = request.form.get('date_bought')
-                    print(date)
                     asset_date_bought = datetime.datetime.strptime(date, "%Y-%m-%d")
                     new_asset = Asset(description=asset_description, type=assetType, purchase_price=token_amount, purchase_type=crypto_selected, usd_price=usd_price, date_bought=asset_date_bought)
                     db.session.add(new_asset)
@@ -339,6 +438,7 @@ def view_assets():
     for asset in assets:
         if asset.currently_owned == True:
             # This will cause a ton of API calls to be used, so it is commented out for now
+            # Easy fix -- Change this so you only call the API in the add asset/edit asset section, not when viewing
             # current_usd_price = float(token_price_api_calls.asset_usd_price(asset.purchase_type, asset.purchase_price))
             asset.purchase_type = token_price_api_calls.token_display_switch(asset.purchase_type)
             asset.date_bought = asset.date_bought.strftime("%a %b %d %Y")

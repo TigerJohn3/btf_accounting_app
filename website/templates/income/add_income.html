@@ -1,0 +1,62 @@
+{% extends 'base.html' %}
+
+{% block title %}Add Income{% endblock %}
+
+{% block content %}
+
+
+<form method="POST">
+    <h1 align="center">Add Income</h1>
+  
+  <!-- Income Inputs -->
+    <h4 align="left"><strong>Income Type</strong></h4>
+    <div class="input-group mb-3">
+        <input type="text" name="incomeType" id="incomeType" class="form-control" placeholder="Enter the type of income received">
+    </div>
+    <h4 align="left"><strong>Token</strong></h4>
+    <div class="input-group mb-3">
+        <input type="text" name="tokenType" id="tokenType" class="form-control" placeholder="Make this a dropdown eventually of the types of tokens we have in BTF Treasury">
+    </div>
+    <h4 align="left"><strong>Token Amount</strong></h4>
+    <div class="input-group mb-3">
+        <input type="text" name="tokenAmount" id="tokenAmount" class="form-control" placeholder="Enter the number of tokens spent">
+    </div>
+    <!--
+    <h4 align="left"><strong>Dollar Amount</strong></h4>
+    <div class="input-group mb-3">
+        <input type="text" name="dollarAmount" id="dollarAmount" class="form-control" placeholder="See if you can have this autoupdate with the coingecko API call, if you can't, delete this">
+    </div>
+    -->
+    <h4 align="left"><strong>Transaction Date</strong></h4>
+    <div class="input-group mb-3">
+        <input name="date" type="date" class="form-control" id="dateBought" value="{{ current_date }}">
+    </div>
+    <h5 align="left">Add a note about this income (optional)</h5>
+    <textarea name="incomeNote" id="note" class="form-control"></textarea>
+    <br>
+    <div class="d-grid gap-2 col-6">
+        <button class="btn btn-primary" type="submit">Add Income</button>
+    </div>
+
+
+    <script>
+        function getTokenType()   {
+            
+            // Get the html element "select" that holds the options
+            let dropdown = document.getElementById("cryptoSelected");
+            let value_of_dropdown = dropdown.value;
+
+            // Get the html option element that was selected
+            let selected_element = dropdown.querySelectorAll("[value=" + value_of_dropdown +"]")[0];
+
+            // Use the "value" attribute for the name if "shortcut-name" is not defined in the html option element
+            let tokenUsed = selected_element.hasAttribute('shortcut-name') ? selected_element.getAttribute('shortcut-name') : selected_element.getAttribute('value');
+            document.getElementById("basic-addon").innerHTML = "Enter " + tokenUsed + " amount:"
+
+            //sessionStorage.setItem("tokenUsed", tokenUsed);
+
+        }
+    </script>
+
+
+{% endblock %}
